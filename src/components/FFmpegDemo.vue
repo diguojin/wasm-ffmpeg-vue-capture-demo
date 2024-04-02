@@ -47,12 +47,13 @@ export default defineComponent({
     }
 
     async function getImage() {
-      console.log('----------')
-      await ffmpeg.exec(['-ss', ss.value,'-i', 'test.avi', '-vframes','1','test.jpg','-an','-f','mjpeg'])
+      console.log('----------1')
+      await ffmpeg.exec(['-ss', ss.value,'-i', 'pi.mp4', '-vframes', '1','test.jpg','-an','-f','mjpeg'])
       message.value = 'Complete transcoding'
+      console.log('Complete transcoding')
       const data = await ffmpeg.readFile('test.jpg')
+      console.log('----------2')
       img.value = URL.createObjectURL(new Blob([(data as Uint8Array).buffer], { type: 'image/jpeg' }))
-      console.log('----------')
       console.log(img.value)
     }
 
@@ -67,8 +68,8 @@ export default defineComponent({
         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
         workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
       })
-      message.value = 'Start transcoding'
-      await ffmpeg.writeFile('test.avi', await fetchFile(videoURL))
+      await ffmpeg.writeFile('pi.mp4', await fetchFile(videoURL))
+      message.value = 'file ready'
     }
 
     return {
